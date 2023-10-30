@@ -31,8 +31,13 @@ class SimleImageViewer {
 	deltaY = 0
 	moved = false
 
-	originalImageWidth = 0
-	originalImageHeigth = 0
+	/**
+	 * @type {MutationObserver}
+	 */
+	imageObserver
+
+	// originalImageWidth = 0
+	// originalImageHeigth = 0
 
 	/**
 	 * @type {HTMLImageElement}
@@ -88,6 +93,19 @@ class SimleImageViewer {
 		document.addEventListener('wheel', this.onWheel, { passive: false })
 		this.imageWrapper.addEventListener('click', this.onClick)
 		this.image.addEventListener('load', this.updateInitalImage)
+
+		// Can get swapped to another image
+		this.imageObserver = new MutationObserver((records) => {
+			for (const record of records) {
+				for (const node of record.addedNodes) {
+					if (node instanceof HTMLImageElement) {
+						this.updateInitalImage()
+						return
+					}
+				}
+			}
+		})
+		this.imageObserver.observe(this.imageWrapper, { childList: true, subtree: true })
 	}
 
 	exit() {
@@ -100,6 +118,7 @@ class SimleImageViewer {
 		document.removeEventListener('wheel', this.onWheel)
 		this.imageWrapper.removeEventListener('click', this.onClick)
 		this.image.removeEventListener('load', this.updateInitalImage)
+		this.imageObserver.disconnect()
 	}
 
 	/**
