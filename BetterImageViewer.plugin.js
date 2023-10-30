@@ -3,6 +3,7 @@
  * @version 1.0
  * @description Better image viewer
  * @author Tony
+ * @source https://github.com/Legend-Master/discord-better-image-viewer
  */
 
 // @ts-check
