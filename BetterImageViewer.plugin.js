@@ -373,18 +373,23 @@ function stop() {}
 
 /** @type {SimleImageViewer | undefined} */
 let imageViewer
+/** @type {HTMLDivElement | undefined} */
+let imageWrapper
 
-function observeImage() {
+/**
+ * @param {HTMLElement} node
+ */
+function observeImageView(node) {
 	/** @type {HTMLDivElement | null} */
-	const imageWrapper = document.querySelector('.imageWrapper_fd6587.image__79a29')
-	if (!imageWrapper) {
+	const wrapper = node.querySelector('.imageWrapper_fd6587.image__79a29')
+	if (!wrapper) {
 		return
 	}
 
-	if (imageWrapper.getAttribute('simple-image-viewer-hooked') === 'yes') {
-		return true
-	}
-	imageWrapper.setAttribute('simple-image-viewer-hooked', 'yes')
+	// if (imageWrapper.getAttribute('simple-image-viewer-hooked') === 'yes') {
+	// 	return
+	// }
+	// imageWrapper.setAttribute('simple-image-viewer-hooked', 'yes')
 
 	/** @type {HTMLDivElement | null} */
 	const backdrop = document.querySelector('.backdrop__7e89b')
@@ -392,26 +397,26 @@ function observeImage() {
 		return
 	}
 
-	const image = imageWrapper.querySelector('img')
+	const image = wrapper.querySelector('img')
 	if (!image) {
 		return
 	}
 
-	if (!imageWrapper.parentElement) {
+	if (!wrapper.parentElement) {
 		return
 	}
-	const link = imageWrapper.parentElement.querySelector('a')
+	const link = wrapper.parentElement.querySelector('a')
 	if (!link) {
 		return
 	}
 
-	imageWrapper.style.width = '90vw'
-	imageWrapper.style.height = '90vh'
+	wrapper.style.width = '90vw'
+	wrapper.style.height = '90vh'
 	// imageWrapper.style.width = ''
 	// imageWrapper.style.height = ''
-	imageWrapper.style.display = 'grid'
-	imageWrapper.style.justifyItems = 'center'
-	imageWrapper.style.alignItems = 'center'
+	wrapper.style.display = 'grid'
+	wrapper.style.justifyItems = 'center'
+	wrapper.style.alignItems = 'center'
 	// image.style.maxWidth = '90vw'
 	// image.style.maxHeight = '90vh'
 
@@ -428,16 +433,35 @@ function observeImage() {
 	// link.style.top = 'unset'
 
 	imageViewer?.exit()
-	imageViewer = new SimleImageViewer(image, imageWrapper, link, backdrop)
+	imageViewer = new SimleImageViewer(image, wrapper, link, backdrop)
+	imageWrapper = wrapper
 
 	return true
 }
 
-function observer() {
-	const viewerMode = observeImage()
-	if (!viewerMode) {
-		imageViewer?.exit()
-		imageViewer = undefined
+function onExitImageView() {
+	imageViewer?.exit()
+	imageViewer = undefined
+	imageWrapper = undefined
+}
+
+/**
+ * @param {MutationRecord} records
+ */
+function observer(records) {
+	if (imageWrapper) {
+		if (!document.contains(imageWrapper)) {
+			onExitImageView()
+		}
+	} else {
+		for (const node of records.addedNodes) {
+			if (node instanceof HTMLElement && node.matches('div.layer_ad604d')) {
+				const succeed = observeImageView(node)
+				if (succeed) {
+					break
+				}
+			}
+		}
 	}
 }
 
