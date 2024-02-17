@@ -386,6 +386,12 @@ function observeImageView(node) {
 		return
 	}
 
+	/** @type {HTMLDivElement | null} */
+	const loadingOverlay = node.querySelector('.loadingOverlay__4d818')
+	if (!loadingOverlay) {
+		return
+	}
+
 	// if (imageWrapper.getAttribute('simple-image-viewer-hooked') === 'yes') {
 	// 	return
 	// }
@@ -414,16 +420,18 @@ function observeImageView(node) {
 	wrapper.style.height = '90vh'
 	// imageWrapper.style.width = ''
 	// imageWrapper.style.height = ''
-	wrapper.style.display = 'grid'
-	wrapper.style.justifyItems = 'center'
-	wrapper.style.alignItems = 'center'
+	// wrapper.style.display = 'grid'
+	// wrapper.style.placeItems = 'center'
 	// image.style.maxWidth = '90vw'
 	// image.style.maxHeight = '90vh'
 
+	loadingOverlay.style.display = 'grid'
+	loadingOverlay.style.placeItems = 'center'
+
 	// image.style.width = '100%'
 	// image.style.height = '100%'
-	// image.style.width = ''
-	// image.style.height = ''
+	image.style.width = ''
+	image.style.height = ''
 	// image.style.maxWidth = '90vw'
 	// image.style.maxHeight = '90vh'
 	image.style.objectFit = 'contain'
