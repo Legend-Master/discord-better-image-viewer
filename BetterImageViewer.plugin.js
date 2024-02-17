@@ -1,6 +1,6 @@
 /**
  * @name BetterImageViewer
- * @version 1.0
+ * @version 1.1
  * @description Better image viewer
  * @author Tony
  * @source https://github.com/Legend-Master/discord-better-image-viewer
