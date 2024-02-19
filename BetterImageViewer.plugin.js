@@ -377,7 +377,7 @@ let imageViewer
 /** @type {HTMLDivElement | undefined} */
 let imageWrapper
 
-const IMAGE_WRAPPER_SELECTOR = '.imageWrapper_fd6587'
+const IMAGE_WRAPPER_SELECTOR = '[class*="imageWrapper_"]'
 
 /**
  * @param {HTMLDivElement} node
@@ -392,7 +392,7 @@ function observeImageView(node) {
 	}
 
 	/** @type {HTMLDivElement | null} */
-	const loadingOverlay = node.querySelector('.loadingOverlay__4d818')
+	const loadingOverlay = node.querySelector('[class*="loadingOverlay__"]')
 	if (!loadingOverlay) {
 		return
 	}
@@ -403,7 +403,7 @@ function observeImageView(node) {
 	// imageWrapper.setAttribute('simple-image-viewer-hooked', 'yes')
 
 	/** @type {HTMLDivElement | null} */
-	const backdrop = document.querySelector('.backdrop__7e89b')
+	const backdrop = document.querySelector('[class*="backdrop__"]')
 	if (!backdrop) {
 		return
 	}
@@ -470,7 +470,7 @@ function observer(records) {
 		for (const node of records.addedNodes) {
 			if (
 				node instanceof HTMLDivElement &&
-				(node.matches('div.layer_ad604d') || node.matches('.imageWrapper_fd6587'))
+				(node.matches('div[class*="layer_"]') || node.matches(IMAGE_WRAPPER_SELECTOR))
 			) {
 				const succeed = observeImageView(node)
 				if (succeed) {
