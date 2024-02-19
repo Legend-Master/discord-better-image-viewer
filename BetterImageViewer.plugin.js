@@ -129,6 +129,7 @@ class SimleImageViewer {
 		if (!this.moved) {
 			this.closeImage()
 		}
+		ev.stopImmediatePropagation()
 	}
 
 	closeImage() {
@@ -376,12 +377,16 @@ let imageViewer
 /** @type {HTMLDivElement | undefined} */
 let imageWrapper
 
+const IMAGE_WRAPPER_SELECTOR = '.imageWrapper_fd6587'
+
 /**
- * @param {HTMLElement} node
+ * @param {HTMLDivElement} node
  */
 function observeImageView(node) {
 	/** @type {HTMLDivElement | null} */
-	const wrapper = node.querySelector('.imageWrapper_fd6587.image__79a29')
+	const wrapper = node.matches(IMAGE_WRAPPER_SELECTOR)
+		? node
+		: node.querySelector(IMAGE_WRAPPER_SELECTOR)
 	if (!wrapper) {
 		return
 	}
@@ -463,7 +468,10 @@ function observer(records) {
 		}
 	} else {
 		for (const node of records.addedNodes) {
-			if (node instanceof HTMLElement && node.matches('div.layer_ad604d')) {
+			if (
+				node instanceof HTMLDivElement &&
+				(node.matches('div.layer_ad604d') || node.matches('.imageWrapper_fd6587'))
+			) {
 				const succeed = observeImageView(node)
 				if (succeed) {
 					break
