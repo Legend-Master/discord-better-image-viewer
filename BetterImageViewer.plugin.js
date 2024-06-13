@@ -1,6 +1,6 @@
 /**
  * @name BetterImageViewer
- * @version 1.2
+ * @version 1.3
  * @description Better image viewer
  * @author Tony
  * @source https://github.com/Legend-Master/discord-better-image-viewer
@@ -392,7 +392,7 @@ function observeImageView(node) {
 	}
 
 	/** @type {HTMLDivElement | null} */
-	const loadingOverlay = node.querySelector('[class*="loadingOverlay__"]')
+	const loadingOverlay = node.querySelector('[class*="loadingOverlay_"]')
 	if (!loadingOverlay) {
 		return
 	}
