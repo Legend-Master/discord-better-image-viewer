@@ -368,10 +368,6 @@ class SimleImageViewer {
 	}
 }
 
-function start() {}
-
-function stop() {}
-
 /** @type {SimleImageViewer | undefined} */
 let imageViewer
 /** @type {HTMLDivElement | undefined} */
@@ -456,6 +452,12 @@ function getImageWrapperFromAddedNode(element) {
 			return /** @type {HTMLDivElement} */ (imageWrapper)
 		}
 	}
+}
+
+function start() {}
+
+function stop() {
+	imageViewer?.exit()
 }
 
 /**
