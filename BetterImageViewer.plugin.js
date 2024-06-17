@@ -377,8 +377,6 @@ let imageViewer
 /** @type {HTMLDivElement | undefined} */
 let imageWrapper
 
-const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImgContainer_"])'
-
 /**
  * @param {HTMLDivElement} wrapper
  */
@@ -437,6 +435,8 @@ function onExitImageView() {
 	imageViewer = undefined
 	imageWrapper = undefined
 }
+
+const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImgContainer_"])'
 
 /**
  * @param {Node} node
