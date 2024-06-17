@@ -377,30 +377,17 @@ let imageViewer
 /** @type {HTMLDivElement | undefined} */
 let imageWrapper
 
-const IMAGE_WRAPPER_SELECTOR = '[class*="imageWrapper_"]'
+const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImgContainer_"])'
 
 /**
- * @param {HTMLDivElement} node
+ * @param {HTMLDivElement} wrapper
  */
-function observeImageView(node) {
+function observeImageView(wrapper) {
 	/** @type {HTMLDivElement | null} */
-	const wrapper = node.matches(IMAGE_WRAPPER_SELECTOR)
-		? node
-		: node.querySelector(IMAGE_WRAPPER_SELECTOR)
-	if (!wrapper) {
-		return
-	}
-
-	/** @type {HTMLDivElement | null} */
-	const loadingOverlay = node.querySelector('[class*="loadingOverlay_"]')
+	const loadingOverlay = wrapper.querySelector('[class*="loadingOverlay_"]')
 	if (!loadingOverlay) {
 		return
 	}
-
-	// if (imageWrapper.getAttribute('simple-image-viewer-hooked') === 'yes') {
-	// 	return
-	// }
-	// imageWrapper.setAttribute('simple-image-viewer-hooked', 'yes')
 
 	/** @type {HTMLDivElement | null} */
 	const backdrop = document.querySelector('[class*="backdrop__"]')
@@ -408,7 +395,7 @@ function observeImageView(node) {
 		return
 	}
 
-	const image = wrapper.querySelector('img')
+	let image = wrapper.querySelector('img')
 	if (!image) {
 		return
 	}
@@ -421,8 +408,6 @@ function observeImageView(node) {
 		return
 	}
 
-	wrapper.style.width = '90vw'
-	wrapper.style.height = '90vh'
 	// imageWrapper.style.width = ''
 	// imageWrapper.style.height = ''
 	// wrapper.style.display = 'grid'
@@ -430,16 +415,11 @@ function observeImageView(node) {
 	// image.style.maxWidth = '90vw'
 	// image.style.maxHeight = '90vh'
 
+	wrapper.style.width = '90vw'
+	wrapper.style.height = '90vh'
+
 	loadingOverlay.style.display = 'grid'
 	loadingOverlay.style.placeItems = 'center'
-
-	// image.style.width = '100%'
-	// image.style.height = '100%'
-	image.style.width = ''
-	image.style.height = ''
-	// image.style.maxWidth = '90vw'
-	// image.style.maxHeight = '90vh'
-	image.style.objectFit = 'contain'
 
 	// link.style.left = '2em'
 	// link.style.bottom = '2em'
@@ -459,6 +439,29 @@ function onExitImageView() {
 }
 
 /**
+ * @param {Node} node
+ * @returns {HTMLDivElement | null | undefined}
+ */
+function getImageWrapperFromAddedNode(node) {
+	if (node instanceof HTMLDivElement) {
+		if (node.matches('div[class*="layer_"]')) {
+			return /** @type {HTMLDivElement | null} */ (node.querySelector(IMAGE_WRAPPER_SELECTOR))
+		}
+		if (node.matches(IMAGE_WRAPPER_SELECTOR)) {
+			return node
+		}
+	}
+	// For bigger images on gallery view's initial load,
+	// img is added after the wrapper and other UIs
+	else if (node instanceof HTMLImageElement) {
+		const imageWrapper = document.querySelector(IMAGE_WRAPPER_SELECTOR)
+		if (imageWrapper && imageWrapper.contains(node)) {
+			return /** @type {HTMLDivElement} */ (imageWrapper)
+		}
+	}
+}
+
+/**
  * @param {MutationRecord} records
  */
 function observer(records) {
@@ -468,11 +471,9 @@ function observer(records) {
 		}
 	} else {
 		for (const node of records.addedNodes) {
-			if (
-				node instanceof HTMLDivElement &&
-				(node.matches('div[class*="layer_"]') || node.matches(IMAGE_WRAPPER_SELECTOR))
-			) {
-				const succeed = observeImageView(node)
+			const imageWrapper = getImageWrapperFromAddedNode(node)
+			if (imageWrapper) {
+				const succeed = observeImageView(imageWrapper)
 				if (succeed) {
 					break
 				}
