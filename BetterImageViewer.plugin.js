@@ -439,23 +439,20 @@ function onExitImageView() {
 const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImgContainer_"])'
 
 /**
- * @param {Node} node
+ * @param {HTMLElement} element
  * @returns {HTMLDivElement | null | undefined}
  */
-function getImageWrapperFromAddedNode(node) {
-	if (node instanceof HTMLDivElement) {
-		if (node.matches('div[class*="layer_"]')) {
-			return /** @type {HTMLDivElement | null} */ (node.querySelector(IMAGE_WRAPPER_SELECTOR))
-		}
-		if (node.matches(IMAGE_WRAPPER_SELECTOR)) {
-			return node
-		}
+function getImageWrapperFromAddedNode(element) {
+	if (element.matches('div[class*="layer_"]')) {
+		return /** @type {HTMLDivElement | null} */ (element.querySelector(IMAGE_WRAPPER_SELECTOR))
+	} else if (element.matches(IMAGE_WRAPPER_SELECTOR)) {
+		return /** @type {HTMLDivElement} */ (element)
 	}
 	// For bigger images on gallery view's initial load,
 	// img is added after the wrapper and other UIs
-	else if (node instanceof HTMLImageElement) {
+	else if (element instanceof HTMLImageElement) {
 		const imageWrapper = document.querySelector(IMAGE_WRAPPER_SELECTOR)
-		if (imageWrapper && imageWrapper.contains(node)) {
+		if (imageWrapper && imageWrapper.contains(element)) {
 			return /** @type {HTMLDivElement} */ (imageWrapper)
 		}
 	}
@@ -471,6 +468,9 @@ function observer(records) {
 		}
 	} else {
 		for (const node of records.addedNodes) {
+			if (!(node instanceof HTMLElement)) {
+				continue
+			}
 			const imageWrapper = getImageWrapperFromAddedNode(node)
 			if (imageWrapper) {
 				const succeed = observeImageView(imageWrapper)
