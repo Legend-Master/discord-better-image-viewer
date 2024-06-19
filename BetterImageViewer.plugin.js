@@ -1,6 +1,6 @@
 /**
  * @name BetterImageViewer
- * @version 1.3
+ * @version 1.4
  * @description Better image viewer
  * @author Tony
  * @source https://github.com/Legend-Master/discord-better-image-viewer
@@ -376,7 +376,7 @@ let imageWrapper
 /**
  * @param {HTMLDivElement} wrapper
  */
-function observeImageView(wrapper) {
+function attachImageViewer(wrapper) {
 	/** @type {HTMLDivElement | null} */
 	const loadingOverlay = wrapper.querySelector('[class*="loadingOverlay_"]')
 	if (!loadingOverlay) {
@@ -384,7 +384,7 @@ function observeImageView(wrapper) {
 	}
 
 	/** @type {HTMLDivElement | null} */
-	const backdrop = document.querySelector('[class*="backdrop__"]')
+	const backdrop = document.querySelector('[class*="backdrop_"]')
 	if (!backdrop) {
 		return
 	}
@@ -475,7 +475,7 @@ function observer(records) {
 			}
 			const imageWrapper = getImageWrapperFromAddedNode(node)
 			if (imageWrapper) {
-				const succeed = observeImageView(imageWrapper)
+				const succeed = attachImageViewer(imageWrapper)
 				if (succeed) {
 					break
 				}
