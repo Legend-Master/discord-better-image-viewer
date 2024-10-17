@@ -154,10 +154,14 @@ class SimleImageViewer {
 			this.image.src = this.link.href
 		}
 
-		this.image.style.width = ''
-		this.image.style.height = ''
+		this.image.style.position = 'unset'
+		this.image.style.top = 'unset'
+		this.image.style.left = 'unset'
+		this.image.style.width = 'unset'
+		this.image.style.height = 'unset'
 		this.image.style.maxWidth = '90vw'
 		this.image.style.maxHeight = '90vh'
+
 		// const { width, height } = this.image.getBoundingClientRect()
 		// this.originalImageWidth = width
 		// this.originalImageHeigth = height
