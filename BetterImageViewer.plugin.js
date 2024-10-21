@@ -377,6 +377,12 @@ let imageViewer
 /** @type {HTMLDivElement | undefined} */
 let imageWrapper
 
+function exitImageView() {
+	imageViewer?.exit()
+	imageViewer = undefined
+	imageWrapper = undefined
+}
+
 /**
  * @param {HTMLDivElement} wrapper
  */
@@ -423,29 +429,27 @@ function attachImageViewer(wrapper) {
 	// link.style.bottom = '2em'
 	// link.style.top = 'unset'
 
-	imageViewer?.exit()
+	exitImageView()
 	imageViewer = new SimleImageViewer(image, wrapper, link, backdrop)
 	imageWrapper = wrapper
 
 	return true
 }
 
-function onExitImageView() {
-	imageViewer?.exit()
-	imageViewer = undefined
-	imageWrapper = undefined
-}
-
-const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImg"], [class*="imageZoom"])'
+const IMAGE_WRAPPER_SELECTOR =
+	'div[class*="imageWrapper_"]:not([class*="lazyImg"], [class*="imageZoom"])'
 
 /**
  * @param {HTMLElement} element
  * @returns {HTMLDivElement | null | undefined}
  */
 function getImageWrapperFromAddedNode(element) {
+	// Single image
 	if (element.matches('div[class*="layer_"]')) {
 		return /** @type {HTMLDivElement | null} */ (element.querySelector(IMAGE_WRAPPER_SELECTOR))
-	} else if (element.matches('div[class*="zoomedMediaFitWrapper_"]')) {
+	}
+	// Gallery view
+	else if (element.matches('div[class*="zoomedMediaFitWrapper_"]')) {
 		return /** @type {HTMLDivElement | null} */ (element.querySelector(IMAGE_WRAPPER_SELECTOR))
 	} else if (element.matches(IMAGE_WRAPPER_SELECTOR)) {
 		return /** @type {HTMLDivElement} */ (element)
@@ -471,7 +475,7 @@ function stop() {
  */
 function observer(records) {
 	if (imageWrapper && !document.contains(imageWrapper)) {
-		onExitImageView()
+		exitImageView()
 	}
 	for (const node of records.addedNodes) {
 		if (!(node instanceof HTMLElement)) {
