@@ -1,6 +1,6 @@
 /**
  * @name BetterImageViewer
- * @version 1.4
+ * @version 1.5
  * @description Better image viewer
  * @author Tony
  * @source https://github.com/Legend-Master/discord-better-image-viewer
@@ -436,7 +436,7 @@ function onExitImageView() {
 	imageWrapper = undefined
 }
 
-const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImgContainer_"])'
+const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImg"], [class*="imageZoom"])'
 
 /**
  * @param {HTMLElement} element
@@ -444,6 +444,8 @@ const IMAGE_WRAPPER_SELECTOR = 'div[class*="imageWrapper_"]:not([class*="lazyImg
  */
 function getImageWrapperFromAddedNode(element) {
 	if (element.matches('div[class*="layer_"]')) {
+		return /** @type {HTMLDivElement | null} */ (element.querySelector(IMAGE_WRAPPER_SELECTOR))
+	} else if (element.matches('div[class*="zoomedMediaFitWrapper_"]')) {
 		return /** @type {HTMLDivElement | null} */ (element.querySelector(IMAGE_WRAPPER_SELECTOR))
 	} else if (element.matches(IMAGE_WRAPPER_SELECTOR)) {
 		return /** @type {HTMLDivElement} */ (element)
@@ -468,21 +470,18 @@ function stop() {
  * @param {MutationRecord} records
  */
 function observer(records) {
-	if (imageWrapper) {
-		if (!document.contains(imageWrapper)) {
-			onExitImageView()
+	if (imageWrapper && !document.contains(imageWrapper)) {
+		onExitImageView()
+	}
+	for (const node of records.addedNodes) {
+		if (!(node instanceof HTMLElement)) {
+			continue
 		}
-	} else {
-		for (const node of records.addedNodes) {
-			if (!(node instanceof HTMLElement)) {
-				continue
-			}
-			const imageWrapper = getImageWrapperFromAddedNode(node)
-			if (imageWrapper) {
-				const succeed = attachImageViewer(imageWrapper)
-				if (succeed) {
-					break
-				}
+		const imageWrapper = getImageWrapperFromAddedNode(node)
+		if (imageWrapper) {
+			const succeed = attachImageViewer(imageWrapper)
+			if (succeed) {
+				break
 			}
 		}
 	}
