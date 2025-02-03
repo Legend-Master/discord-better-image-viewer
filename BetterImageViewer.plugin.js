@@ -149,8 +149,10 @@ class SimleImageViewer {
 			this.image.addEventListener('load', this.updateInitalImage)
 		}
 
-		// Prevent infinite loading
-		if (this.image.src !== this.link.href) {
+		// Prevent infinite loading,
+		// `this.link.href` can be empty string,
+		// see https://github.com/Legend-Master/discord-better-image-viewer/issues/11#issuecomment-2630965007
+		if (this.image.src !== this.link.href && this.link.href) {
 			this.image.src = this.link.href
 		}
 
