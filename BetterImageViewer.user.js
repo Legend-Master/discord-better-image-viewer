@@ -1,12 +1,17 @@
-/**
- * @name BetterImageViewer
- * @version 1.6
- * @description Better image viewer
- * @author Tony
- * @source https://github.com/Legend-Master/discord-better-image-viewer
- */
-
 // @ts-check
+// ==UserScript==
+// @name        Discord Better Image Viewer
+// @namespace   https://github.com/Legend-Master
+// @version     1.6
+// @author      Tony
+// @icon        data:image/webp;base64,UklGRkgEAABXRUJQVlA4WAoAAAAQAAAAPwAAPwAAQUxQSNgBAAABkBttf5x4n7A64GjBQxVUchVAvnQAEetGNt3/kUNMhnvYM8NjWfpmLA5bHwVEhCO3bSTJzuKu7plTLUk9AR1oLFpOF8X/8uMSwuWj/F/Mp2hpDR6yqzKz/aniA1an/cwkEa2abEqS9I0PISIE33iSPL+MAdsPmcFw90t658OjELzz5O92CJP1G11/kc6zI70jv9Y9Bk2G/EjWgT0YavKQIzOdMABW7kb1FG4FDLp5QTomoCNfW+vib2w8k9A3fGvtsb+zZjLWfH9kptXRE1qU5h4yFNHTWoHs7nxbsWFiNlzB3tG5o08NT5ffSoMDHZPT8QhzM7ZmTQFrrmGv9PCLQYHAryFMzNuYNWkH24rJb8ya9DuBsdjQUUTHTUxnehU8SwPMoutsBuzpdHDcAydtOGFaMegQWE3nMSvTomCjRMPivzr8LxmUCCw/1PioKGYV1Ah6yB8u+k/0f6Sft/p1s1CHuX7fkO9b+n3zCfZt8blxNhCfWy+w4nNzjJh2unN7C6uvG56gbkGUR03ddIDR123yulFet+rrZnndLu8bpH1LAQzkfVPnvu2Qom875siMum/s2bdu+/Wtu3t9a4/B8ebcuW/eTAD7dH17j3uD+f17g0X3ewMAVlA4IEoCAACwDgCdASpAAEAAPpE2mUgloqKhLBqsALASCWwAxRHafqutG9jvN7hLjr8YdTzxMP0r3gG6Af2D/AdYB6AHls+x/+4NdmkTqwGtr3xA8IEpMmdcb/HoTI9ljnld2lkv6bDaLgUfTJtXeD7xsfhzMmrjaq2CjxNQR8vlRcq/1gAA/vBCf/8ID/+DN//8EPvnKiXB2s35zA3/KS9/E7Mx/0bAoL0AY/9uszh2TIa1P+dYln5DaQVCLEFoJoq23HQ7a9OPW7+twdNI4dJFjv8vEBe3IvGozGhKQq3WekqoxaajZkvR53VPqyYyMcia0701hXjIfsweD9r+rcXe+CwCHpr/bnzdhk9t74KBMyR+Gr15LZtHzJUArub03h8//nxhVy7sgOCIytDJ9wQse3m6t6ce+xi8ulPhSzIzMXLM8wm6eJq4ZknsERBsECQ0EuzO43NY1OQfzp92XwU/Mor8ov6VRkyLX8NIDPhb08wqgdfIs7x67TT5OwjllIoFMzQENS7ntyRVJ9Lt8WgD04Ow6EHksa3gxcLhtBldHWJ/+VTK5hZ5JEXZs+sNdNCOBFQnJZJWKBpe8cfQR//HnMc8SpB9fW5nm1r9DEXEsffFFIP6FYbJRoUcx8Eh4QUvY8MWLGCA9UM3BFgHMDP8RMBhdHAKzBI1DW4e68oX+ln0+c4viNnk+AuG9PqbWeYTvptfOdORJqvYPA5qAt0PFc2/6KfGgTyjnN/zsYM5NqJpDfVjsI5BGvOR3aJ5vRegbWbxb7qsz5G6VXth0IAA
+// @homepage    https://github.com/Legend-Master/discord-better-image-viewer
+// @downloadURL https://github.com/Legend-Master/discord-better-image-viewer/raw/main/BetterImageViewer.user.js
+// @updateURL   https://github.com/Legend-Master/discord-better-image-viewer/raw/main/BetterImageViewer.user.js
+// @supportURL  https://github.com/Legend-Master/discord-better-image-viewer/issues
+// @match       https://discord.com/*
+// @grant       none
+// ==/UserScript==
 
 const SCALE_FACTOR = 1.2
 const KEY_MOVE_STEP_PX = 100
@@ -456,11 +461,11 @@ function getImageWrapperFromAddedNode(element) {
 	}
 }
 
-function start() {}
+// function start() {}
 
-function stop() {
-	imageViewer?.exit()
-}
+// function stop() {
+// 	imageViewer?.exit()
+// }
 
 /**
  * @param {MutationRecord} records
@@ -483,8 +488,11 @@ function observer(records) {
 	}
 }
 
-module.exports = () => ({
-	start,
-	stop,
-	observer,
+new MutationObserver((records) => {
+	for (const record of records) {
+		observer(record)
+	}
+}).observe(document.documentElement, {
+	childList: true,
+	subtree: true,
 })
