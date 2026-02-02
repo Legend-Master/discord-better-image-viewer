@@ -1,6 +1,6 @@
 /**
  * @name BetterImageViewer
- * @version 1.7
+ * @version 1.8
  * @description Better image viewer
  * @author Tony
  * @source https://github.com/Legend-Master/discord-better-image-viewer
@@ -202,7 +202,7 @@ class SimleImageViewer {
 				ev.stopImmediatePropagation()
 				document.removeEventListener('mousemove', this.onMouseMove)
 			},
-			{ once: true, capture: true }
+			{ once: true, capture: true },
 		)
 		ev.preventDefault()
 	}
@@ -388,13 +388,13 @@ function exitImageView() {
  */
 function attachImageViewer(wrapper) {
 	/** @type {HTMLDivElement | null} */
-	const loadingOverlay = wrapper.querySelector('[class*="-loadingOverlay"]')
+	const loadingOverlay = wrapper.querySelector('[class*="loadingOverlay_"]')
 	if (!loadingOverlay) {
 		return
 	}
 
 	/** @type {HTMLDivElement | null} */
-	const backdrop = document.querySelector('[class*="-carouselModal"]')
+	const backdrop = document.querySelector('[class*="carouselModal_"]')
 	if (!backdrop) {
 		return
 	}
@@ -437,7 +437,7 @@ const IMAGE_WRAPPER_SELECTOR =
  */
 function getImageWrapperFromAddedNode(element) {
 	// Single image
-	if (element.matches('div[class*="-layer"]')) {
+	if (element.matches('div[class*="layer_"]')) {
 		return /** @type {HTMLDivElement | null} */ (element.querySelector(IMAGE_WRAPPER_SELECTOR))
 	}
 	// Gallery view
